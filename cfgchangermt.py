@@ -13,6 +13,8 @@ user = cfg['DEFAULT']['LOGIN']
 password = cfg['DEFAULT']['PASSWORD']
 port = cfg['DEFAULT']['PORT']
 cmd = cfg['DEFAULT']['COMMAND']
+#to = cfg['DEFAULT]']['TIMEOUT']
+timeout = 5
 
 ##########################################################################
 def file_len(adresy):
@@ -51,6 +53,7 @@ class run_thread(threading.Thread):
         #debug("%s zakonczony %s" % (self.counter, result))
         debug(self.counter, self.wartosc_w, content)
 ############################################################################    
+print(adresy)
 licznik_adresow = file_len(adresy)
 file_in = open(adresy, 'r')
 for i, line in enumerate(file_in):
@@ -80,10 +83,10 @@ for i, line in enumerate(file_in):
             if channel in r:
                 channel_data += channel.recv(9999)
                 buf = channel_data.decode('utf-8')
-                #print('buf: ', buf)
+                print('buf: ', buf)
                 if buf.endswith('] > ') == True:
                     debug('jest prompt, wysylamy cmd')
-                    channel.send(cmd)
+                    channel.send(cmd+'\r\n')
                     channel_data = bytes()
                     channel.send('quit\r\n')
                     continue
