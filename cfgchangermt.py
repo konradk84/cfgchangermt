@@ -1,17 +1,18 @@
-import sys, paramiko, re, time, datetime, threading, os, select
+import sys, paramiko, re, time, datetime, threading, os, select, configparser
 
-#hostname = "172.17.80.9"
-user = "back1up"
-password = "12345azxqc"
-port = "10022"
-adresy = "test.txt"
-cmd = "/ip service set ssh port=10022\r\n/tool graphing set store-every=5min\r\ntool graphing interface add interface=all\r\n \
-        /system clock set time-zone-name=Europe/Warsaw\r\n system ntp client set enabled=yes primary-ntp=172.16.11.2 secondary-ntp=172.16.11.11\r\n"
 channel_data = bytes()
 buf = ''
 licznik = int()
 prompt = False
-timeout = 5
+
+cfg = configparser.ConfigParser()
+cfg.read('config.ini')
+
+adresy = cfg['DEFAULT']['IP_FILE']
+user = cfg['DEFAULT']['LOGIN']
+password = cfg['DEFAULT']['PASSWORD']
+port = cfg['DEFAULT']['PORT']
+cmd = cfg['DEFAULT']['COMMAND']
 
 ##########################################################################
 def file_len(adresy):
@@ -22,7 +23,7 @@ def file_len(adresy):
 def debug(content):
     print(content)
     czas_teraz = datetime.datetime.now().strftime("%H:%M:%S")
-    log_file = open('cfg_changer_run.txt', 'a')
+    log_file = open(cfg['DEFAULT']['DEBUG_FILE'], 'a')
     log_buf = ''
     log_buf = 'log: ' +czas_teraz+ ' : '+content + '\n'
     log_file.write(log_buf)
@@ -31,7 +32,7 @@ def debug(content):
 def log_error(address, content):
     print(address, content)
     czas_teraz = datetime.datetime.now().strftime("%H:%M:%S")
-    log_file = open('cfg_changer_errors.txt', 'a')
+    log_file = open(cfg['DEFAULT']['ERROR_FILE'], 'a')
     log_buf = ''
     log_buf = 'log: ' +czas_teraz+ ' : '+address + ' : '+content + '\n'
     log_file.write(log_buf)
