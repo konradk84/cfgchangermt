@@ -41,7 +41,7 @@ def log_error(address, content):
 
 ############################################################################    
 print(ip_list)
-ip_count = file_len(ip_list)
+ip_count = file_len(ip_list) #todo: check len, if 0 then exit
 file_in = open(ip_list, 'r')
 for i, line in enumerate(file_in):
     try:
@@ -69,7 +69,7 @@ for i, line in enumerate(file_in):
             if channel in r:
                 channel_data += channel.recv(9999)
                 buf = channel_data.decode('utf-8')
-                print('buf: ', buf)
+                #print('buf: ', buf)
                 if buf.endswith('] > ') == True:
                     debug('We found prompt, sending cmd')
                     channel.send(cmd+'\r\n')
