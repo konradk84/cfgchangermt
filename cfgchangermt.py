@@ -64,21 +64,18 @@ for i, line in enumerate(file_in):
         
         channel = client.invoke_shell()
         channel_data = bytes()
-        while quit_loop == False:
+        while quit_loop == False: #todo: fix that unecessery loop condition
             r,w,e = select.select([channel], [], [], timeout)
             if channel in r:
                 channel_data += channel.recv(9999)
                 buf = channel_data.decode('utf-8')
-                #print('buf: ', buf)
+                print('buf: ', buf)
+                debug(buf)
                 if buf.endswith('] > ') == True:
                     debug('We found prompt, sending cmd')
                     channel.send(cmd+'\r\n')
                     channel_data = bytes()
                     channel.send('quit\r\n')
-                    continue
-                if buf.find('quit\r\n') != -1:
-                    debug('Recived quit')
-                    channel_data = bytes()
                     quit_loop = True
                     break     
         percent = i / ip_count * 100
