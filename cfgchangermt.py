@@ -20,6 +20,7 @@ user = cfg[config]['LOGIN']
 password = cfg[config]['PASSWORD']
 port = cfg[config]['PORT']
 cmd = cfg[config]['COMMAND']
+cmd = cmd.strip("\"")
 #to = cfg['config]']['TIMEOUT']
 timeout = 5
 
@@ -82,11 +83,10 @@ for i, line in enumerate(file_in):
             if channel in r:
                 channel_data += channel.recv(9999)
                 buf = channel_data.decode('utf-8')
-                #print('buf: ', buf)
-                #debug(buf)
                 if buf.endswith('] > ') == True:
                     debug('We found prompt, sending cmd')
                     channel.send(cmd+'\r\n')
+                    time.sleep(2)
                     channel_data = bytes()
                     channel.send('quit\r\n')
                     quit_loop = True
