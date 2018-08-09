@@ -7,12 +7,20 @@ prompt = False
 cfg = configparser.ConfigParser()
 cfg.read('config.ini')
 
-ip_list = cfg['DEFAULT']['IP_FILE']
-user = cfg['DEFAULT']['LOGIN']
-password = cfg['DEFAULT']['PASSWORD']
-port = cfg['DEFAULT']['PORT']
-cmd = cfg['DEFAULT']['COMMAND']
-#to = cfg['DEFAULT]']['TIMEOUT']
+if len(sys.argv) < 3:
+    print('''\nToo few arguments. Usage: client_update_mt.py <config_section> <ip_list> ''')
+    #config = sys.argv[1]
+    #cmd = cfg[config]['COMMAND']
+    #print(cmd)
+    exit()
+
+config = sys.argv[1]
+ip_list = sys.argv[2]
+user = cfg[config]['LOGIN']
+password = cfg[config]['PASSWORD']
+port = cfg[config]['PORT']
+cmd = cfg[config]['COMMAND']
+#to = cfg['config]']['TIMEOUT']
 timeout = 5
 
 ##########################################################################
@@ -21,10 +29,13 @@ def file_len(ip_list):
         for i, l in enumerate(f):
             pass
     return i + 1
+
 def debug(content):
     print(content)
     time_now = datetime.datetime.now().strftime("%H:%M:%S")
-    log_file = open(cfg['DEFAULT']['DEBUG_FILE'], 'a')
+    file = ip_list.strip('.txt')
+    file = file + '_' + cfg[config]['DEBUG_FILE']
+    log_file = open(file, 'a')
     log_buf = ''
     log_buf = 'log: ' +time_now+ ' : '+content + '\n'
     log_file.write(log_buf)
@@ -33,7 +44,9 @@ def debug(content):
 def log_error(address, content):
     print(address, content)
     time_now = datetime.datetime.now().strftime("%H:%M:%S")
-    log_file = open(cfg['DEFAULT']['ERROR_FILE'], 'a')
+    file = ip_list.strip('.txt')
+    file = file + '_' + cfg[config]['ERROR_FILE']
+    log_file = open(file, 'a')
     log_buf = ''
     log_buf = 'log: ' +time_now+ ' : '+address + ' : '+content + '\n'
     log_file.write(log_buf)
