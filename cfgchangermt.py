@@ -70,7 +70,7 @@ for i, line in enumerate(file_in):
         client = paramiko.SSHClient()
         client.load_system_host_keys()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(ip, port=port, username=user, password=password, timeout=10)
+        client.connect(ip, port=port, username=user, password=password, timeout=5)
         
         #print("logged in\n")
         debug("logged in\n")
@@ -82,8 +82,8 @@ for i, line in enumerate(file_in):
             if channel in r:
                 channel_data += channel.recv(9999)
                 buf = channel_data.decode('utf-8')
-                print('buf: ', buf)
-                debug(buf)
+                #print('buf: ', buf)
+                #debug(buf)
                 if buf.endswith('] > ') == True:
                     debug('We found prompt, sending cmd')
                     channel.send(cmd+'\r\n')
